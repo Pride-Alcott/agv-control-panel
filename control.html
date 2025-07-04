@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AGV Control Panel</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 40px;
+      background-color: #f5f5f5;
+      margin: 0;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+    
+    .status {
+      display: flex;
+      align-items: center;
+      font-size: 1.2em;
+      margin-bottom: 40px;
+      font-weight: 500;
+    }
+    
+    .status-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #27ae60;
+      margin-right: 12px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    
+    .section {
+      margin-bottom: 40px;
+    }
+    
+    .section h2 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: #34495e;
+      font-weight: 600;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 18px 24px;
+      font-size: 1.1em;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      min-width: 180px;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn-enable {
+      background-color: #27ae60;
+      color: white;
+    }
+    
+    .btn-disable {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .btn-autonomous {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .btn-manual {
+      background-color: #9b59b6;
+      color: white;
+    }
+    
+    .btn-return {
+      background-color: #f39c12;
+      color: white;
+    }
+    
+    .btn-hold {
+      background-color: #7f8c8d;
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .button-row {
+        flex-direction: column;
+      }
+      
+      .btn {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AGV Control Panel</h1>
+    
+    <div class="status">
+      <div class="status-dot"></div>
+      <span>Status: Connected</span>
+    </div>
+    
+    <div class="section">
+      <h2>AGV Control</h2>
+      <div class="button-row">
+        <button class="btn btn-enable" onclick="sendAction('/arm')">Enable Motors</button>
+        <button class="btn btn-disable" onclick="sendAction('/disarm')">Disable Motors</button>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>Navigation Modes</h2>
+      <div class="button-row">
+        <button class="btn btn-autonomous" onclick="sendMode('AUTO')">Autonomous</button>
+        <button class="btn btn-manual" onclick="sendMode('MANUAL')">Manual</button>
+      </div>
+      <div class="button-row">
+        <button class="btn btn-return" onclick="sendMode('SMART_RTL')">Return To Base</button>
+        <button class="btn btn-hold" onclick="sendMode('HOLD')">Hold Position</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function sendMode(mode) {
+      fetch(`/set_mode/${mode}`, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => alert("Set mode to " + data.mode + ": " + (data.success ? "OK" : "FAILED")))
+        .catch(err => alert("Error: " + err));
+    }
+    
+    function sendAction(endpoint) {
+      fetch(endpoint, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => alert(`${data.status}: ${data.success ? "OK" : "FAILED"}`))
+        .catch(err => alert("Error: " + err));
+    }
+  </script>
+</body>
+</html>
