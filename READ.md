@@ -1,45 +1,38 @@
-# AGV Control Panel
+# AGV Web Dashboard
 
-A modern web interface for controlling Autonomous Ground Vehicles (AGV) using ROS2 and MAVROS.
+A lightweight web dashboard for controlling an AGV using ROS 2 and MAVROS via FastAPI.
 
-## Features
+## 📦 Features
 
-- Launch and monitor MAVROS connections
-- Control AGV bringup processes
-- Arm and disarm vehicle
-- Set flight modes (MANUAL, AUTO, RTL, etc.)
-- Real-time system logging
+- Set flight/control modes (AUTO, MANUAL, HOLD, SMART_RTL)
+- Arm/Disarm vehicle
+- Fully web-accessible from local network
+- FastAPI + HTML frontend
+- Mock support for testing without real MAVROS
 
-## Setup
+## 🚀 Installation
 
-### Backend
 
-1. Install dependencies:
+## ⚙️ systemd Autostart
 
-cd backend
-pip install -r requirements.txt
+To run this on boot on a Pi or Linux system:
 
-2. RUN THE BACKEND SERVER:
+```bash
+sudo cp agv_web_dashboard.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable agv_web_dashboard
+sudo systemctl start agv_web_dashboard
+```
 
-uvicorn server:app --reload
+## 📁 Files
 
-### Frontend
+- `control.html` – Frontend UI
+- `agv_web_control.py` – FastAPI ROS backend
+- `agv_web_dashboard.service` – Optional auto-start unit
 
-1. Open `frontend/index.html` in your web browser
-2. Make sure your backend server is running at http://localhost:8000
+---
 
-## Requirements
+Built for AGV deployments on Raspberry Pi + ROS 2 (Humble)
 
-- Python 3.8+
-- ROS2 (Foxy or later)
-- MAVROS installed and configured
-- Web browser (Chrome, Firefox, Edge, Safari)
-
-## Usage
-
-1. Launch the backend server
-2. Open the frontend in your browser
-3. Click "Launch MAVROS" to establish the connection
-4. Use the control buttons to operate your AGV
 
 
